@@ -1,0 +1,38 @@
+<!-- client/dashboard.html -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Classroom Portal — Dashboard</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Classroom Portal</div>
+    <div class="top-actions">
+      <span id="userLabel"></span>
+      <button id="btnLogout" class="btn subtle">Logout</button>
+    </div>
+  </header>
+
+  <main class="container grid">
+    <aside class="sidebar card">
+      <nav>
+        <ul>
+          <li><a href="#" data-view="classes">My Classes</a></li>
+          <li><a href="#" data-view="assignments">My Submissions</a></li>
+          <li id="teacherLinks" class="hidden"><a href="#" data-view="teacher-classes">Teacher: My Classes</a></li>
+          <li id="adminLinks" class="hidden"><a href="#" data-view="admin-users">Admin: Users</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <section class="content card" id="viewRoot">
+      <!-- content dynamically injected -->
+    </section>
+  </main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

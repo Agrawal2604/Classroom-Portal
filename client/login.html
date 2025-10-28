@@ -1,0 +1,53 @@
+<!-- ...existing code... -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Classroom Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="login-container">
+    <h2>Classroom Portal Login</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+    <p id="msg"></p>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          document.getElementById("msg").textContent = data.message || "Login Successful";
+          return;
+        }
+
+        // store token (if provided) and redirect to app
+        if (data.token) localStorage.setItem("token", data.token);
+        window.location.href = "index.html";
+      } catch (err) {
+        document.getElementById("msg").textContent = "Network error. Please try again.";
+        console.error(err);
+      }
+    });
+  </script>
+  <script type="module" src="./login.js"></script>
+</body>
+</html>
+<!-- ...existing code... -->
