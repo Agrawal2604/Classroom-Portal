@@ -7,4 +7,9 @@ node_modules/
 # Build outputs
 dist/
 build/
-out/
+
+
+node_modules/
+.env
+build/
+dist/
