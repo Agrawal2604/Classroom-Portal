@@ -2,7 +2,8 @@
   "name": "classroom-assignment-portal",
   "version": "1.0.0",
   "description": "A Classroom Assignment Portal with roles (student, teacher, admin), authentication, CRUD operations, and MongoDB connectivity.",
-  "main": "server.js",
+  "main": "app.js",
+  "type": "module",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js"

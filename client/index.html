@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -7,20 +8,17 @@
   <link rel="stylesheet" href="style.css" />
 
 </head>
+
 <body>
   <header class="header">
     <nav>
-      <a href="login.html" class="nav-link">Classes</a>
+      <button id="dashboardBtn" class="nav-link btn subtle">Dashboard</button>
+      <button id="alternativeDashboardBtn" class="nav-link btn subtle">Alternative View</button>
     </nav>
     <div class="brand">Classroom Assignment Portal</div>
     <div class="controls">
-      <label class="small">Role</label>
-      <select id="roleSelect" aria-label="Select role">
-        <option value="student">Student</option>
-        <option value="teacher">Teacher</option>
-        <option value="admin">Admin</option>
-      </select>
-      <button id="logoutBtn" class="btn subtle" title="Logout (simulated)">Logout</button>
+      <span id="userInfo" class="small"></span>
+      <button id="logoutBtn" class="btn subtle">Logout</button>
     </div>
   </header>
 
@@ -94,10 +92,10 @@
         <div class="mt-4">
           <input id="assignSearch" placeholder="Search assignments..." />
           <div class="muted small mt-1">Filter: <select id="assignFilter">
-            <option value="all">All</option>
-            <option value="upcoming">Upcoming</option>
-            <option value="overdue">Overdue</option>
-          </select></div>
+              <option value="all">All</option>
+              <option value="upcoming">Upcoming</option>
+              <option value="overdue">Overdue</option>
+            </select></div>
 
           <ul id="assignmentsList" class="list mt-3"></ul>
 
@@ -116,14 +114,15 @@
         <button id="backToClassBtn" class="btn subtle">Back to Class</button>
         <h2 id="assignmentTitle">Assignment</h2>
         <div id="assignmentDesc" class="muted"></div>
-        <div class="muted small">Due: <span id="assignmentDue"></span> • Status: <span id="assignmentStatus"></span></div>
+        <div class="muted small">Due: <span id="assignmentDue"></span> • Status: <span id="assignmentStatus"></span>
+        </div>
 
         <div class="mt-4 grid-2">
           <div>
             <h3>Submission</h3>
             <div id="submissionArea"></div>
             <div id="submitForm" class="mt-2">
-              <input id="submissionLink" placeholder="Submission link (GitHub / Drive)"/>
+              <input id="submissionLink" placeholder="Submission link (GitHub / Drive)" />
               <input id="submissionFile" type="file" />
               <div class="mt-2">
                 <button id="submitBtn" class="btn">Submit</button>
@@ -146,7 +145,7 @@
       </div>
     </section>
 
-    <!-- MODALS -->
+    <!-- MODALS
     <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
       <div class="modal-content">
         <h3 id="modalTitle">Modal</h3>
@@ -156,14 +155,35 @@
           <button id="modalSave" class="btn">Save</button>
         </div>
       </div>
-    </div>
+    </div> -->
 
   </main>
 
   <footer class="footer">
-    <div class="container small muted">Static demo — replace mock functions with API calls to connect to your backend.</div>
+    <div class="container small muted">
+      Connected to real API •
+      <button onclick="window.location.href='dashboard.html'" class="btn subtle small">Switch to Alternative
+        Dashboard</button>
+    </div>
   </footer>
 
   <script src="api-app.js"></script>
+  <script>
+    // Add navigation functionality
+    document.addEventListener('DOMContentLoaded', function () {
+      // Dashboard navigation
+      document.getElementById('dashboardBtn')?.addEventListener('click', function () {
+        // Already on main dashboard, just scroll to top or refresh view
+        window.scrollTo(0, 0);
+        if (window.renderDashboard) window.renderDashboard();
+      });
+
+      // Alternative dashboard navigation
+      document.getElementById('alternativeDashboardBtn')?.addEventListener('click', function () {
+        window.location.href = 'dashboard.html';
+      });
+    });
+  </script>
 </body>
+
 </html>

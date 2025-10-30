@@ -9,41 +9,134 @@
 </head>
 <body>
   <div class="login-container">
-    <h2>Classroom Portal Login</h2>
-    <form id="loginForm">
-      <input type="email" id="email" placeholder="Email" required />
-      <input type="password" id="password" placeholder="Password" required />
-      <button type="submit">Login</button>
-    </form>
+    <h2>Classroom Portal</h2>
+    
+    <div id="loginSection">
+      <h3>Login</h3>
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email" required />
+        <input type="password" id="loginPassword" placeholder="Password" required />
+        <button type="submit">Login</button>
+      </form>
+      <p><a href="#" onclick="showRegister()">Don't have an account? Register</a></p>
+    </div>
+
+    <div id="registerSection" style="display: none;">
+      <h3>Register</h3>
+      <form id="registerForm">
+        <input type="text" id="registerName" placeholder="Full Name" required />
+        <input type="email" id="registerEmail" placeholder="Email" required />
+        <input type="password" id="registerPassword" placeholder="Password" required />
+        <select id="registerRole" required>
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+          <option value="admin">Admin</option>
+        </select>
+        <button type="submit">Register</button>
+      </form>
+      <p><a href="#" onclick="showLogin()">Already have an account? Login</a></p>
+    </div>
+    
     <p id="msg"></p>
+    
+    <!-- Quick Test Accounts -->
+    <div class="test-accounts" style="margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 8px;">
+      <h4>Test Accounts:</h4>
+      <button onclick="quickLogin('teacher@test.com', 'password123')" class="btn subtle">Login as Teacher</button>
+      <button onclick="quickLogin('student@test.com', 'password123')" class="btn subtle">Login as Student</button>
+    </div>
   </div>
 
   <script>
+    function showRegister() {
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("registerSection").style.display = "block";
+      document.getElementById("msg").textContent = "";
+    }
+
+    function showLogin() {
+      document.getElementById("registerSection").style.display = "none";
+      document.getElementById("loginSection").style.display = "block";
+      document.getElementById("msg").textContent = "";
+    }
+
+    // Quick login for testing
+    function quickLogin(email, password) {
+      document.getElementById("loginEmail").value = email;
+      document.getElementById("loginPassword").value = password;
+      document.getElementById("loginForm").dispatchEvent(new Event('submit'));
+    }
+
+    // API helper
+    async function apiCall(endpoint, options = {}) {
+      const config = {
+        headers: { "Content-Type": "application/json" },
+        ...options
+      };
+
+      const response = await fetch(`http://localhost:3001/api${endpoint}`, config);
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || "Request failed");
+      }
+      
+      return data;
+    }
+
+    // Login form handler
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
 
       try {
-        const res = await fetch("http://localhost:5000/api/auth/login", {
+        document.getElementById("msg").textContent = "Logging in...";
+        const data = await apiCall("/auth/login", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ email, password })
         });
+        
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        
+        // Show success message and redirect
+        document.getElementById("msg").textContent = "Login successful! Redirecting...";
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1000);
+        
+      } catch (error) {
+        document.getElementById("msg").textContent = error.message;
+      }
+    });
 
-        const data = await res.json().catch(() => ({}));
+    // Register form handler
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("registerName").value;
+      const email = document.getElementById("registerEmail").value;
+      const password = document.getElementById("registerPassword").value;
+      const role = document.getElementById("registerRole").value;
 
-        if (!res.ok) {
-          document.getElementById("msg").textContent = data.message || "Login Successful";
-          return;
-        }
-
-        // store token (if provided) and redirect to app
-        if (data.token) localStorage.setItem("token", data.token);
-        window.location.href = "index.html";
-      } catch (err) {
-        document.getElementById("msg").textContent = "Network error. Please try again.";
-        console.error(err);
+      try {
+        document.getElementById("msg").textContent = "Creating account...";
+        const data = await apiCall("/auth/register", {
+          method: "POST",
+          body: JSON.stringify({ name, email, password, role })
+        });
+        
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        
+        // Show success message and redirect
+        document.getElementById("msg").textContent = "Registration successful! Redirecting...";
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1000);
+        
+      } catch (error) {
+        document.getElementById("msg").textContent = error.message;
       }
     });
   </script>
