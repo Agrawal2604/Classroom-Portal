@@ -1,0 +1,24 @@
+{
+  "name": "classroom-assignment-portal",
+  "version": "1.0.0",
+  "description": "A comprehensive classroom assignment portal with React frontend and MERN backend",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client-prod\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "client-prod": "serve -s client/build -l 3000",
+    "build": "cd client && npm run build",
+    "install-server": "cd server && npm install",
+    "install-client": "cd client && npm install",
+    "install-all": "npm run install-server && npm run install-client",
+    "start": "npm run build && npm run dev",
+    "test-api": "node server/testAPI.js",
+    "seed-db": "cd server && node seedDatabase.js && node addMoreSubmissions.js && node addMoreAssignments.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": ["classroom", "assignment", "portal", "react", "mern", "education"],
+  "author": "Your Name",
+  "license": "MIT"
+}
